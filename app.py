@@ -564,7 +564,7 @@ def main():
         st.caption("Tips: Gunakan pengaturan default jika baru pertama kali mencoba.") # Ditambahkan catatan
 
         max_queries = st.slider(
-            "AI Akan Cari Berapa Kali Sekaligus?,"
+            "AI Akan Cari Berapa Kali Sekaligus?",
             min_value=1, 
             max_value=5, 
             value=2,
