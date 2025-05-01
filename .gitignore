@@ -1,0 +1,25 @@
+# Environment
+venv/
+.env
+*.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Log & cache
+*.log
+*.tmp
+*.cache
+
+# VSCode settings (optional)
+.vscode/
+
+# MacOS / Windows trash
+.DS_Store
+Thumbs.db
