@@ -549,76 +549,85 @@ async def run_research_pipeline(research_topic, together_api_key, tavily_api_key
 # ==========================================
 
 def main():
-    st.title("🔍 Deep Research AI")
+    st.title("🔍 AI Riset Mendalam") # Diubah ke Bahasa Indonesia
     st.markdown("""
-    This application uses AI to generate comprehensive research reports on any topic.
-    Enter your research topic below, provide API keys, and get a detailed, evidence-based report.
-    """)
+    Aplikasi ini menggunakan AI untuk menghasilkan laporan riset komprehensif tentang topik apa pun.
+    Masukkan topik riset Anda di bawah, dan dapatkan laporan terperinci berbasis bukti.
+    """) # Diubah ke Bahasa Indonesia
     
     with st.sidebar:
         # Pastikan variabel API key tetap didefinisikan (mengambil dari env var)
         together_api_key = DEFAULT_TOGETHER_API_KEY
         tavily_api_key = DEFAULT_TAVILY_API_KEY
 
-        st.header("Research Parameters")
+        st.header("Pengaturan Proses Riset") # Diubah ke Bahasa Indonesia
+        st.caption("Tips: Gunakan pengaturan default jika baru pertama kali mencoba.") # Ditambahkan catatan
 
         max_queries = st.slider(
-            "Max Queries per Iteration", 
+            "AI Akan Cari Berapa Kali Sekaligus?,"
             min_value=1, 
             max_value=5, 
             value=2,
-            help="Maximum number of search queries to generate per research cycle"
+            help="Setiap putaran riset, AI akan melakukan beberapa pencarian berbeda untuk memperkaya informasi. Semakin banyak, hasil riset bisa jadi lebih luas — tapi juga lebih lama." # Diubah ke Bahasa Indonesia
         )
         
         budget = st.slider(
-            "Research Iterations", 
+            "Jumlah Iterasi Riset", # Diubah ke Bahasa Indonesia
             min_value=1, 
             max_value=5, 
             value=2,
-            help="Number of research refinement cycles to perform"
+            help="Berapa kali proses riset diulang untuk menyempurnakan hasil." # Diubah ke Bahasa Indonesia
         )
         
         max_sources = st.slider(
-            "Max Sources", 
+            "Jumlah Maksimum Sumber" # Diubah ke Bahasa Indonesia
             min_value=5, 
             max_value=20, 
             value=10,
-            help="Maximum number of sources to include in final synthesis"
+            help="Batas jumlah sumber yang digunakan dalam laporan akhir." # Diubah ke Bahasa Indonesia
         )
         
         max_tokens = st.slider(
-            "Report Length", 
+            "Panjang Laporan (Token)", # Diubah ke Bahasa Indonesia
             min_value=2048, 
             max_value=16384, 
             value=8192,
-            help="Maximum token length for the generated report"
+            help="Semakin besar nilainya, semakin panjang dan detail laporan yang dihasilkan." # Diubah ke Bahasa Indonesia
         )
     
-    research_topic = st.text_area("Research Topic", placeholder="e.g., Impact of artificial intelligence in education", height=100)
+    research_topic = st.text_area("Topik Riset", placeholder="Contoh: Dampak kecerdasan buatan dalam pendidikan (sumber-sumbernya harus berupa jurnal)", height=100, help="Jika Anda ingin laporan hanya mengambil referensi dari jurnal akademik, tambahkan kalimat seperti: 'sumber-sumbernya harus berupa jurnal' di akhir topik Anda." )  # Diubah ke Bahasa Indonesia
     
-    if st.button("Start Research", type="primary", disabled=not (together_api_key and tavily_api_key and research_topic)):
+    # Tombol dinonaktifkan jika API keys tidak ada ATAU topik riset kosong
+    start_button_disabled = not (together_api_key and tavily_api_key and research_topic)
+    
+    if st.button("Mulai Riset", type="primary", disabled=start_button_disabled): # Diubah ke Bahasa Indonesia
         if not research_topic:
-            st.error("Please enter a research topic")
+            st.error("Silakan masukkan topik riset") # Diubah ke Bahasa Indonesia
             return
 
         # Cek apakah API keys berhasil diambil dari environment variables
         if not together_api_key:
-             st.error("Together AI API key not found in environment variables.")
+             st.error("Kunci API Together AI tidak ditemukan di environment variables.") # Diubah ke Bahasa Indonesia
              return
         if not tavily_api_key:
-             st.error("Tavily API key not found in environment variables.")
+             st.error("Kunci API Tavily tidak ditemukan di environment variables.") # Diubah ke Bahasa Indonesia
              return
 
-        # Show progress information
+        # Tampilkan informasi progres
         progress_container = st.container()
-        progress_bar = progress_container.progress(0, text="Initializing research pipeline...")
+        progress_bar = progress_container.progress(0, text="Menginisialisasi pipeline riset...") # Diubah ke Bahasa Indonesia
         status_placeholder = st.empty()
         
-        # Run the research pipeline
-        with st.spinner("Researching..."):
+        # Jalankan pipeline riset
+        with st.spinner("Sedang melakukan riset..."): # Diubah ke Bahasa Indonesia
             try:
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
+                # Setup event loop for asyncio
+                try:
+                    loop = asyncio.get_running_loop()
+                except RuntimeError:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+
                 report = loop.run_until_complete(run_research_pipeline(
                     research_topic=research_topic,
                     together_api_key=together_api_key,
@@ -631,21 +640,24 @@ def main():
                     progress_bar=progress_bar
                 ))
                 
-                # Display the report
-                st.subheader("Research Report")
+                # Tampilkan laporan
+                st.subheader("Laporan Riset") # Diubah ke Bahasa Indonesia
                 st.markdown(report, unsafe_allow_html=True)
                 
-                # Add download button for the report
-                report_html = markdown.markdown(report)
-                st.download_button(
-                    label="Download Report as HTML",
-                    data=report_html,
-                    file_name="research_report.html",
-                    mime="text/html"
-                )
-                
+                # Tambahkan tombol unduh untuk laporan
+                try:
+                    report_html = markdown.markdown(report)
+                    st.download_button(
+                        label="Unduh Laporan sebagai HTML", # Diubah ke Bahasa Indonesia
+                        data=report_html,
+                        file_name="laporan_riset.html", # Diubah ke Bahasa Indonesia
+                        mime="text/html"
+                    )
+                except Exception as md_e:
+                     st.error(f"Gagal mengonversi laporan ke HTML: {str(md_e)}") # Diubah ke Bahasa Indonesia
+
             except Exception as e:
-                st.error(f"Error: {str(e)}")
+                st.error(f"Terjadi kesalahan: {str(e)}") # Diubah ke Bahasa Indonesia
 
 if __name__ == "__main__":
     main()
