@@ -556,25 +556,12 @@ def main():
     """)
     
     with st.sidebar:
-        st.header("API Credentials")
-        st.markdown("Get API keys from [Together AI](https://together.ai/docs/quickstart) and [Tavily](https://docs.tavily.com/documentation/quickstart)")
-        
-        together_api_key = st.text_input(
-            "Together AI API Key", 
-            value=DEFAULT_TOGETHER_API_KEY,
-            type="password",
-            help="Enter your Together AI API key"
-        )
-        
-        tavily_api_key = st.text_input(
-            "Tavily API Key", 
-            value=DEFAULT_TAVILY_API_KEY,
-            type="password",
-            help="Enter your Tavily API key"
-        )
-        
+        # Pastikan variabel API key tetap didefinisikan (mengambil dari env var)
+        together_api_key = DEFAULT_TOGETHER_API_KEY
+        tavily_api_key = DEFAULT_TAVILY_API_KEY
+
         st.header("Research Parameters")
-        
+
         max_queries = st.slider(
             "Max Queries per Iteration", 
             min_value=1, 
@@ -610,18 +597,18 @@ def main():
     research_topic = st.text_area("Research Topic", placeholder="e.g., Impact of artificial intelligence in education", height=100)
     
     if st.button("Start Research", type="primary", disabled=not (together_api_key and tavily_api_key and research_topic)):
-        if not together_api_key:
-            st.error("Please enter your Together AI API key")
-            return
-            
-        if not tavily_api_key:
-            st.error("Please enter your Tavily API key")
-            return
-            
         if not research_topic:
             st.error("Please enter a research topic")
             return
-        
+
+        # Cek apakah API keys berhasil diambil dari environment variables
+        if not together_api_key:
+             st.error("Together AI API key not found in environment variables.")
+             return
+        if not tavily_api_key:
+             st.error("Tavily API key not found in environment variables.")
+             return
+
         # Show progress information
         progress_container = st.container()
         progress_bar = progress_container.progress(0, text="Initializing research pipeline...")
