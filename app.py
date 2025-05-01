@@ -580,7 +580,7 @@ def main():
         )
         
         max_sources = st.slider(
-            "Jumlah Maksimum Sumber" # Diubah ke Bahasa Indonesia
+            "Jumlah Maksimum Sumber", # Diubah ke Bahasa Indonesia
             min_value=5, 
             max_value=20, 
             value=10,
