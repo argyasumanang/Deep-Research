@@ -5,6 +5,7 @@ import markdown
 import time
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
+import os
 
 from pydantic import BaseModel, Field
 from together import AsyncTogether
